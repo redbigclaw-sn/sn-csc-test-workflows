@@ -1,0 +1,53 @@
+name: Delete Azure VM
+on:
+  workflow_dispatch:
+    inputs:
+      deploymentID:
+        description: "ServiceNow Deployment ID (required by CSC)"
+        required: true
+        type: string
+      vm_name:
+        description: "Name of the virtual machine to delete"
+        required: true
+        type: string
+      resource_group:
+        description: "Azure Resource Group name"
+        required: true
+        type: string
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      confirm_deletion:
+        description: "Type CONFIRM to proceed with deletion"
+        required: true
+        type: string
+
+jobs:
+  delete-vm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate confirmation
+        run: |
+          if [ "${{ inputs.confirm_deletion }}" != "CONFIRM" ]; then
+            echo "ERROR: Deletion not confirmed. Type CONFIRM to proceed."
+            exit 1
+          fi
+
+      - name: Log inputs
+        run: |
+          echo "=== Delete Azure VM Request ==="
+          echo "Deployment ID: ${{ inputs.deploymentID }}"
+          echo "VM Name: ${{ inputs.vm_name }}"
+          echo "Resource Group: ${{ inputs.resource_group }}"
+          echo "Environment: ${{ inputs.environment }}"
+
+      - name: Simulate VM deletion
+        run: |
+          echo "Simulating VM deletion (test mode - no actual Azure calls)"
+          sleep 3
+          echo "VM ${{ inputs.vm_name }} deleted successfully (simulated)"
