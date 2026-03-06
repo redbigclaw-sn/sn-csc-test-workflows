@@ -1,0 +1,114 @@
+{
+  "workflows": {
+    "Create Azure VM": {
+      "file": ".github/workflows/create-vm.yml",
+      "description": "Provision a new Azure Virtual Machine",
+      "inputs": {
+        "deploymentID": {
+          "type": "string",
+          "required": true,
+          "description": "ServiceNow Deployment ID"
+        },
+        "vm_name": {
+          "type": "string",
+          "required": true,
+          "description": "Name for the virtual machine"
+        },
+        "vm_size": {
+          "type": "choice",
+          "required": true,
+          "options": [
+            "Standard_D2s_v3",
+            "Standard_D4s_v3",
+            "Standard_D8s_v3",
+            "Standard_B2s"
+          ]
+        },
+        "environment": {
+          "type": "choice",
+          "required": true,
+          "options": [
+            "dev",
+            "staging",
+            "prod"
+          ]
+        },
+        "resource_group": {
+          "type": "string",
+          "required": true
+        },
+        "location": {
+          "type": "choice",
+          "required": false,
+          "options": [
+            "australiaeast",
+            "eastus",
+            "westeurope"
+          ],
+          "default": "australiaeast"
+        },
+        "enable_monitoring": {
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        }
+      }
+    },
+    "Delete Azure VM": {
+      "file": ".github/workflows/delete-vm.yml",
+      "description": "Decommission an Azure Virtual Machine",
+      "inputs": {
+        "deploymentID": {
+          "type": "string",
+          "required": true
+        },
+        "vm_name": {
+          "type": "string",
+          "required": true
+        },
+        "resource_group": {
+          "type": "string",
+          "required": true
+        },
+        "environment": {
+          "type": "choice",
+          "required": true,
+          "options": [
+            "dev",
+            "staging",
+            "prod"
+          ]
+        },
+        "confirm_deletion": {
+          "type": "string",
+          "required": true,
+          "description": "Type CONFIRM to proceed"
+        }
+      }
+    },
+    "List Azure Resources": {
+      "file": ".github/workflows/list-resources.yml",
+      "description": "List Azure resources by environment",
+      "inputs": {
+        "deploymentID": {
+          "type": "string",
+          "required": true
+        },
+        "environment": {
+          "type": "choice",
+          "required": true,
+          "options": [
+            "dev",
+            "staging",
+            "prod",
+            "all"
+          ]
+        },
+        "resource_group": {
+          "type": "string",
+          "required": false
+        }
+      }
+    }
+  }
+}
