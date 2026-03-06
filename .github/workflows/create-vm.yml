@@ -1,0 +1,75 @@
+name: Create Azure VM
+on:
+  workflow_dispatch:
+    inputs:
+      deploymentID:
+        description: "ServiceNow Deployment ID (required by CSC)"
+        required: true
+        type: string
+      vm_name:
+        description: "Name for the virtual machine"
+        required: true
+        type: string
+      vm_size:
+        description: "Azure VM SKU"
+        required: true
+        type: choice
+        options:
+          - Standard_D2s_v3
+          - Standard_D4s_v3
+          - Standard_D8s_v3
+          - Standard_B2s
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      resource_group:
+        description: "Azure Resource Group name"
+        required: true
+        type: string
+      location:
+        description: "Azure region"
+        required: false
+        type: choice
+        options:
+          - australiaeast
+          - eastus
+          - westeurope
+        default: australiaeast
+      enable_monitoring:
+        description: "Enable Azure Monitor"
+        required: false
+        type: boolean
+        default: "true"
+
+jobs:
+  create-vm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log inputs
+        run: |
+          echo "=== Create Azure VM Request ==="
+          echo "Deployment ID: ${{ inputs.deploymentID }}"
+          echo "VM Name: ${{ inputs.vm_name }}"
+          echo "VM Size: ${{ inputs.vm_size }}"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Resource Group: ${{ inputs.resource_group }}"
+          echo "Location: ${{ inputs.location }}"
+          echo "Enable Monitoring: ${{ inputs.enable_monitoring }}"
+
+      - name: Simulate VM provisioning
+        run: |
+          echo "Simulating VM creation (test mode - no actual Azure calls)"
+          echo "Tags: deploymentID=${{ inputs.deploymentID }}, environment=${{ inputs.environment }}"
+          sleep 5
+          echo "VM ${{ inputs.vm_name }} created successfully (simulated)"
+
+      - name: Output deployment result
+        run: |
+          echo "::notice title=VM Created::VM ${{ inputs.vm_name }} provisioned in ${{ inputs.resource_group }}"
+          echo "DEPLOYMENT_ID=${{ inputs.deploymentID }}" >> $GITHUB_OUTPUT
+          echo "VM_ID=/subscriptions/test-sub/resourceGroups/${{ inputs.resource_group }}/providers/Microsoft.Compute/virtualMachines/${{ inputs.vm_name }}" >> $GITHUB_OUTPUT
