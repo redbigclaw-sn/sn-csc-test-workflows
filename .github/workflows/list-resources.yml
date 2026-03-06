@@ -1,0 +1,36 @@
+name: List Azure Resources
+on:
+  workflow_dispatch:
+    inputs:
+      deploymentID:
+        description: "ServiceNow Deployment ID"
+        required: true
+        type: string
+      environment:
+        description: "Environment to list resources for"
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+          - all
+      resource_group:
+        description: "Azure Resource Group (leave blank for all)"
+        required: false
+        type: string
+
+jobs:
+  list-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List resources
+        run: |
+          echo "=== List Azure Resources ==="
+          echo "Deployment ID: ${{ inputs.deploymentID }}"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Resource Group: ${{ inputs.resource_group || 'ALL' }}"
+          echo ""
+          echo "Simulated resources:"
+          echo "  - vm-dev-001 (Standard_D2s_v3) [running]"
+          echo "  - vm-dev-002 (Standard_B2s) [stopped]"
